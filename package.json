@@ -1,0 +1,22 @@
+{
+  "name": "oat-datepicker",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Datepicker and date-range WebComponents extracted from Oat UI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tusharneje-07/oat-datepicker.git"
+  },
+  "keywords": ["oat", "datepicker", "date-range", "webcomponent", "ui"],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "dist/oat-datepicker.min.js",
+  "style": "dist/oat-datepicker.min.css",
+  "scripts": {
+    "build": "make dist"
+  }
+}
