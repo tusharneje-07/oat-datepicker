@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>oat-datepicker Demo</title>
+    <meta
+      name="description"
+      content="Standalone demo of oat-datepicker components built on top of Oat UI."
+    />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/knadh/oat@main/dist/oat.min.css" />
+    <link rel="stylesheet" href="./dist/oat-datepicker.min.css" />
+
+    <style>
+      :root {
+        --page-max: 980px;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem 1rem 4rem;
+      }
+
+      main {
+        max-width: var(--page-max);
+        margin: 0 auto;
+      }
+
+      .hero {
+        margin-bottom: 1.5rem;
+      }
+
+      .hero h1 {
+        margin-bottom: 0.5rem;
+      }
+
+      .hero p {
+        margin: 0;
+      }
+
+      .link-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.9rem;
+      }
+
+      .demo-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .row {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .output {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid var(--color-border, #d7d7d7);
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.03);
+        overflow-x: auto;
+      }
+
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <section class="hero">
+        <h1>oat-datepicker</h1>
+        <p>Datepicker and date-range WebComponents extracted from Oat UI.</p>
+        <div class="link-row">
+          <a href="https://github.com/tusharneje-07/oat-datepicker" target="_blank" rel="noreferrer">Repo</a>
+          <a href="https://github.com/knadh/oat" target="_blank" rel="noreferrer">Main Project: knadh/oat</a>
+        </div>
+      </section>
+
+      <section class="card demo-grid">
+        <h2>Single Datepicker</h2>
+        <div class="row">
+          <ot-datepicker id="single-picker">
+            <input type="text" name="meeting_date" placeholder="Pick a date" />
+          </ot-datepicker>
+          <div class="output" id="single-output">Waiting for selection...</div>
+        </div>
+      </section>
+
+      <section class="card demo-grid">
+        <h2>Date Range</h2>
+        <div class="row">
+          <ot-date-range id="range-picker">
+            <ot-datepicker data-range-start>
+              <input type="text" name="from_date" placeholder="From date" />
+            </ot-datepicker>
+            <ot-datepicker data-range-end>
+              <input type="text" name="to_date" placeholder="To date" />
+            </ot-datepicker>
+          </ot-date-range>
+          <div class="output" id="range-output">Waiting for range selection...</div>
+        </div>
+      </section>
+
+      <section class="card demo-grid">
+        <h2>Min / Max Constraint</h2>
+        <p>This picker is limited to June 2026.</p>
+        <div class="row">
+          <ot-datepicker id="limited-picker">
+            <input
+              type="text"
+              name="limited_date"
+              min="2026-06-01"
+              max="2026-06-30"
+              placeholder="Pick a date in June 2026"
+            />
+          </ot-datepicker>
+          <div class="output" id="limited-output">Waiting for selection...</div>
+        </div>
+      </section>
+
+      <section class="card demo-grid">
+        <h2>API Controls</h2>
+        <p>Programmatic controls for the first picker.</p>
+        <div class="btn-row">
+          <button type="button" id="set-today">Set Today</button>
+          <button type="button" id="set-next-week">Set +7 Days</button>
+          <button type="button" id="clear-date">Clear</button>
+          <button type="button" id="open-picker">Open</button>
+          <button type="button" id="close-picker">Close</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/gh/knadh/oat@main/dist/oat.min.js" defer></script>
+    <script src="./dist/oat-datepicker.min.js" defer></script>
+    <script defer>
+      const single = document.getElementById("single-picker");
+      const singleOut = document.getElementById("single-output");
+      const range = document.getElementById("range-picker");
+      const rangeOut = document.getElementById("range-output");
+      const limited = document.getElementById("limited-picker");
+      const limitedOut = document.getElementById("limited-output");
+
+      function addDays(baseDate, days) {
+        const d = new Date(baseDate.getTime());
+        d.setDate(d.getDate() + days);
+        return d;
+      }
+
+      function toISO(date) {
+        return date.toISOString().slice(0, 10);
+      }
+
+      single.addEventListener("ot-date-change", (event) => {
+        singleOut.textContent = JSON.stringify(event.detail, null, 2);
+      });
+
+      range.addEventListener("ot-date-range-change", (event) => {
+        rangeOut.textContent = JSON.stringify(event.detail, null, 2);
+      });
+
+      limited.addEventListener("ot-date-change", (event) => {
+        limitedOut.textContent = JSON.stringify(event.detail, null, 2);
+      });
+
+      document.getElementById("set-today").addEventListener("click", () => {
+        single.setDate(toISO(new Date()));
+      });
+
+      document.getElementById("set-next-week").addEventListener("click", () => {
+        single.setDate(toISO(addDays(new Date(), 7)));
+      });
+
+      document.getElementById("clear-date").addEventListener("click", () => {
+        single.clearDate();
+      });
+
+      document.getElementById("open-picker").addEventListener("click", () => {
+        single.open();
+      });
+
+      document.getElementById("close-picker").addEventListener("click", () => {
+        single.close();
+      });
+    </script>
+  </body>
+</html>
